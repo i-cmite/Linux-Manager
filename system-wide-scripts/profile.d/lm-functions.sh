@@ -218,3 +218,15 @@ nullDirRec() {
   find "$path" -type f -print0 -exec truncate -s 0 {} \;
   echo ""
 }
+
+gen_str() {
+  local length=${1:-16}
+  tr -dc 'A-Za-z0-9!@#$%^&*()_+-=' < /dev/urandom | head -c $length
+  echo
+}
+
+gen_hex() {
+  local length=${1:-8}
+  tr -dc '0-9A-F' < /dev/urandom | head -c $length
+  echo
+}

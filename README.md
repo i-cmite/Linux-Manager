@@ -17,7 +17,7 @@ sudo ./init.sh
 
 Provide some interesting functions for Linux.
 
-> Last Updated: 2026-03-10
+> Last Updated: 2026-03-23
 
 ## [DevOps](./DevOps/README.md)
 
