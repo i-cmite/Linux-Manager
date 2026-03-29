@@ -40,13 +40,39 @@ get_distrib_info() {
 }
 
 download_docker() {
+  # 从环境变量获取安装的版本
+  local containerd_io_version="${containerd_io_ver:-2.2.1-1}"
+  local docker_ce_version="${docker_ce_ver:-29.1.4-1}"
+  local docker_ce_cli_version="${docker_ce_cli_ver:-29.1.4-1}"
+  local docker_buildx_plugin_version="${docker_buildx_plugin_ver:-0.30.1-1}"
+  local docker_compose_plugin_version="${docker_compose_plugin_ver:-5.0.1-1}"
+
+  # 打印版本信息
+  header=$(printf "%-22s : %s\n" 'Package' 'Version')
+  echo -e "\e[0;32m${header}\e[0m"
+  printf "%-22s : %s\n" 'containerd.io' "$containerd_io_version"
+  printf "%-22s : %s\n" 'docker-ce' "$docker_ce_version"
+  printf "%-22s : %s\n" 'docker-ce-cli' "$docker_ce_cli_version"
+  printf "%-22s : %s\n" 'docker-buildx-plugin' "$docker_buildx_plugin_version"
+  printf "%-22s : %s\n" 'docker-compose-plugin' "$docker_compose_plugin_version"
+
   docker_base="https://download.docker.com/linux/ubuntu/dists/noble/pool/stable/${ARCH}"
+  local status=0
 
   wget -nv ${docker_base}/containerd.io_${containerd_io_version}~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb -O /tmp/containerd.io.deb
+  status=$((status + $?))
   wget -nv ${docker_base}/docker-ce-cli_${docker_ce_cli_version}~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb -O /tmp/docker-ce.deb
+  status=$((status + $?))
   wget -nv ${docker_base}/docker-ce_${docker_ce_version}~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb -O /tmp/docker-ce-cli.deb
+  status=$((status + $?))
   wget -nv ${docker_base}/docker-buildx-plugin_${docker_buildx_plugin_version}~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb -O /tmp/docker-buildx-plugin.deb
+  status=$((status + $?))
   wget -nv ${docker_base}/docker-compose-plugin_${docker_compose_plugin_version}~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb -O /tmp/docker-compose-plugin.deb
+  status=$((status + $?))
+  [ "$status" -ne 0 ] && {
+    echo -e "${ERROR} Cannot download docker packages."
+    exit 1
+  }
 }
 
 install_docker() {
@@ -58,7 +84,11 @@ install_docker() {
 }
 
 clean() {
-  rm -f /tmp/containerd.io.deb /tmp/docker-ce.deb /tmp/docker-ce-cli.deb /tmp/docker-buildx-plugin.deb /tmp/docker-compose-plugin.deb
+  rm -f /tmp/containerd.io.deb \
+        /tmp/docker-ce.deb \
+        /tmp/docker-ce-cli.deb \
+        /tmp/docker-buildx-plugin.deb \
+        /tmp/docker-compose-plugin.deb
 }
 
 create_docker_user() {
@@ -72,7 +102,11 @@ create_docker_user() {
     fi
     groupConfig="-g docker"
   fi
-  useradd ${uidConfig} ${groupConfig} -d /home/docker -r -s /sbin/nologin docker
+  if id docker > /dev/null 2>&1; then
+    echo -e "${INFO} docker 用户已存在"
+  else
+    useradd ${uidConfig} ${groupConfig} -d /home/docker -r -s /sbin/nologin docker
+  fi
   [ ! -d '/home/docker' ] && {
     echo -e "${INFO} Create Docker HOME"
     mkdir /home/docker
@@ -145,12 +179,6 @@ install() {
   create_docker_user
   configure_docker
 }
-
-containerd_io_version="2.2.1-1"
-docker_ce_version="29.1.4-1"
-docker_ce_cli_version="29.1.4-1"
-docker_buildx_plugin_version="0.30.1-1"
-docker_compose_plugin_version="5.0.1-1"
 
 [ ! -d "${HOME}/logs" ] && mkdir ${HOME}/logs
 install 2>&1 | tee ${HOME}/logs/docker.log
