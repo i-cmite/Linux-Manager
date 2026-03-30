@@ -37,3 +37,18 @@ sudo ./scripts/gitea.sh
 ```
 
 > Last Updated: 2026-03-30
+
+## Code-Server
+
+[Code-Server](https://github.com/coder/code-server) allows you to run VS Code on any machine anywhere and access it in the browser.
+
+```shell []
+cd DevOps
+# Two options to install code-server.
+# Replace [user] with the user running the code-server.
+sudo ./scripts/gitea.sh [user]
+# Otherwise, the code-server will run as the current user.
+sudo ./scripts/gitea.sh
+```
+
+> Last Updated: 2026-03-31
