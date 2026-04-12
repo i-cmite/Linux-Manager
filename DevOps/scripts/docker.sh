@@ -10,6 +10,20 @@ fi
 INFO="\e[0;32m[INFO]\e[0m"
 ERROR="\e[0;31m[ERROR]\e[0m"
 
+print_version() {
+  clear
+  echo "+------------------------------------------------------------------------+"
+  echo "|        LM-docker for Ubuntu Linux Server, Written by Echocolate        |"
+  echo "+------------------------------------------------------------------------+"
+  echo "|               Scripts to install Docker Engine on Ubuntu               |"
+  echo "+------------------------------------------------------------------------+"
+  echo "|                Version: 1.1.1  Last Updated: 2026-04-12                |"
+  echo "+------------------------------------------------------------------------+"
+  echo "|                      https://repos.echocolate.xyz                      |"
+  echo "+------------------------------------------------------------------------+"
+  sleep 2
+}
+
 detect_arch() {
   case "$(uname -m)" in
     x86_64|amd64)
@@ -172,6 +186,7 @@ configure_docker() {
 }
 
 install() {
+  print_version
   get_distrib_info
   download_docker
   install_docker

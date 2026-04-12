@@ -10,6 +10,20 @@ fi
 INFO="\e[0;32m[INFO]\e[0m"
 ERROR="\e[0;31m[ERROR]\e[0m"
 
+print_version() {
+  clear
+  echo "+------------------------------------------------------------------------+"
+  echo "|        LM-gitea for Ubuntu Linux Server, Written by Echocolate         |"
+  echo "+------------------------------------------------------------------------+"
+  echo "|                   Scripts to install Gitea on Ubuntu                   |"
+  echo "+------------------------------------------------------------------------+"
+  echo "|                Version: 1.1.0  Last Updated: 2026-04-12                |"
+  echo "+------------------------------------------------------------------------+"
+  echo "|                      https://repos.echocolate.xyz                      |"
+  echo "+------------------------------------------------------------------------+"
+  sleep 2
+}
+
 detect_arch() {
   case "$(uname -m)" in
     x86_64|amd64)
@@ -44,18 +58,18 @@ download_gitea() {
   status=$((status + $?))
   [ "${status}" -ne 0 ] && {
     echo -e "${ERROR} Download Gitea failed."
-    rm -f /tmp/gitea /tmp/app.ini
-    exit 1
+    clean_with_error
   }
 }
 
 check_git() {
   if id git &>/dev/null; then
     echo -e "${INFO} User git already exists."
-    return 0
+  else
+    useradd -r -s /bin/bash -c 'Git Version Control' -U -p '!' -d /home/git git
   fi
 
-  useradd -r -s /bin/git-shell -c 'Git Version Control' -U -p '!' -d /home/git -m git
+  [ ! -d /home/git ] && mkdir /home/git
   chown git:git /home/git && chmod 755 /home/git
 
   if id git > /dev/null 2>&1; then
@@ -69,7 +83,6 @@ check_git() {
 configure_gitea() {
   mv /tmp/gitea /usr/local/bin/gitea
   chmod +x /usr/local/bin/gitea
-
   mkdir -p /var/lib/gitea/{custom,data,log}
   chown -R git:git /var/lib/gitea/
   chmod -R 750 /var/lib/gitea/
@@ -77,6 +90,24 @@ configure_gitea() {
   mv /tmp/app.ini /etc/gitea/app.ini
   chown -R root:git /etc/gitea
   chmod 770 /etc/gitea
+  chmod 660 /etc/gitea/app.ini
+  # sed -i 's|\(^;SSH_ROOT_PATH =.*\)|\1\nSSH_ROOT_PATH =/home/git/.ssh|g' /etc/gitea/app.ini
+  [ "${socket}" = 'y' ] && configure_socket
+}
+
+configure_socket() {
+  sed -i 's/;PROTOCOL = http/;PROTOCOL = http\nPROTOCOL = http+unix/g' /etc/gitea/app.ini
+  sed -i 's|\(^;HTTP_ADDR.*\)|\1\nHTTP_ADDR = /run/gitea/gitea.socket|g' /etc/gitea/app.ini
+  sed -i 's/\(^;UNIX_SOCKET_PERMISSION.*\)/\1\nUNIX_SOCKET_PERMISSION = 666/g' /etc/gitea/app.ini
+  cat > /etc/tmpfiles.d/gitea_run_dir.conf <<EOF
+# 类型  路径             模式  用户  组    寿命(空白表示不自动清理)
+d       /run/gitea       0755  git   git   -
+EOF
+  systemd-tmpfiles --create /etc/tmpfiles.d/gitea_run_dir.conf
+  [ $? -ne 0 ] && {
+    echo -e "${ERROR} Unable to set socket."
+    clean_with_error
+  }
 }
 
 install_service() {
@@ -101,6 +132,13 @@ EOF
   systemctl daemon-reload
 }
 
+clean_with_error() {
+  rm -f /tmp/gitea /tmp/app.ini
+  rm -rf /usr/local/bin/gitea /var/lib/gitea /etc/gitea
+  rm -f /etc/tmpfiles.d/gitea_run_dir.conf
+  exit 1
+}
+
 reminder() {
   echo
   cat <<EOF
@@ -112,6 +150,9 @@ EOF
 }
 
 install() {
+  print_version
+  read -p $'\e[0;33mChoose whether to listen on a Unix socket instead of TCP (y/n, default n): \e[0m' -n1 socket
+  echo
   detect_arch
   download_gitea
   check_git

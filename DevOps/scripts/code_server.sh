@@ -11,6 +11,17 @@ INFO="\e[0;32m[INFO]\e[0m"
 ERROR="\e[0;31m[ERROR]\e[0m"
 
 enter_parameters() {
+  clear
+  echo "+------------------------------------------------------------------------+"
+  echo "|        LM-coder for Ubuntu Linux Server, Written by Echocolate         |"
+  echo "+------------------------------------------------------------------------+"
+  echo "|                Scripts to install code server on Ubuntu                |"
+  echo "+------------------------------------------------------------------------+"
+  echo "|                Version: 1.0.1  Last Updated: 2026-04-12                |"
+  echo "+------------------------------------------------------------------------+"
+  echo "|                      https://repos.echocolate.xyz                      |"
+  echo "+------------------------------------------------------------------------+"
+  sleep 2
   # 需要手动设置的参数
   echo -en "\e[0;33mEnter the address that code-server binds(default 0.0.0.0): \e[0m"
   read bind_addr
