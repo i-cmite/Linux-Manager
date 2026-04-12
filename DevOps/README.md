@@ -25,7 +25,7 @@ export docker_compose_plugin_ver='5.1.1-1'
 ./scripts/docker.sh
 ```
 
-> Last Updated: 2026-03-30
+> Last Updated: 2026-04-12
 
 ## Gitea
 
@@ -36,7 +36,7 @@ cd DevOps
 sudo ./scripts/gitea.sh 
 ```
 
-> Last Updated: 2026-03-30
+> Last Updated: 2026-04-12
 
 ## Code-Server
 
@@ -51,4 +51,24 @@ sudo ./scripts/gitea.sh [user]
 sudo ./scripts/gitea.sh
 ```
 
-> Last Updated: 2026-03-31
+> Last Updated: 2026-04-12
+
+## Fail2Ban
+
+[Fail2Ban](https://github.com/fail2ban/fail2ban) is an intrusion prevention framework for Linux that protects servers from brute-force attacks by monitoring system logs (e.g., SSH, Nginx) for repeated failures.
+
+```shell []
+cd DevOps
+
+# switch to root first
+sudo su
+
+# Add environment variables to choose the jail that you want to enable
+export sshd_jail='y'
+export nginx_jail='y'
+export mail_jail='y'
+
+./scripts/fail2ban.sh 
+```
+
+> Last Updated: 2026-04-12
