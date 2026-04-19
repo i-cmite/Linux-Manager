@@ -42,3 +42,27 @@ export maxmind_license_key=''
 ```
 
 > Last Updated: 2026-04-18
+
+## PHP
+
+[PHP](https://www.php.net/) is a popular general-purpose scripting language that is especially suited to web development.
+
+Specify the PHP version and web directory via environment variables before running the script.
+
+```shell []
+cd Web
+
+# switch to root first
+sudo su
+
+# Specify PHP version, or leave it blank
+export PHP_ver=''
+export web_path='/home/wwwroot/default'
+# Optional. This environment variable only needs to be set if you select the Apache mod_php mode.
+export apache_path='/usr/local/apache'
+
+# install php
+./scripts/php.sh
+```
+
+> Last Updated: 2026-04-19

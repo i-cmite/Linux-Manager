@@ -52,7 +52,7 @@ generate_nginx_filter() {
 [Definition]
 datepattern = %%Y-%%m-%%dT%%H:%%M:%%S%%z
 # 匹配 HTTP 401 认证失败
-failregex = ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:401,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+failregex = ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:401,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 ignoreregex =
 EOF
 
@@ -60,7 +60,7 @@ EOF
 [Definition]
 datepattern = %%Y-%%m-%%dT%%H:%%M:%%S%%z
 # 匹配 Nginx 限流日志
-failregex = ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:429,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+failregex = ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:429,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 ignoreregex =
 EOF
 
@@ -68,7 +68,7 @@ EOF
 [Definition]
 datepattern = %%Y-%%m-%%dT%%H:%%M:%%S%%z
 # 匹配登录接口失败（需要应用层返回特定状态码）
-failregex = ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+?(?:/wp-login\.php|/admin|/login|/user/login|/auth|/signin|/api/login)(?:[/\s?][^"]*)?",Referer:"[^"]*",Status:(?:401|403|404|429|500),Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+failregex = ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+?(?:/wp-login\.php|/admin|/login|/user/login|/auth|/signin|/api/login)(?:[/\s?][^"]*)?",Referer:"[^"]*",Status:(?:401|403|404|429|500),Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 ignoreregex =
 EOF
 
@@ -76,7 +76,7 @@ EOF
 [Definition]
 datepattern = %%Y-%%m-%%dT%%H:%%M:%%S%%z
 # 匹配敏感文件探测请求
-failregex = ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:/\.git|/\.env|/\.bak|/\.sql|/\.log|/wp-config|/config\.php|/\.htaccess|/\.htpasswd|/admin|/phpmyadmin|/manager|/console|/\.svn|/\.DS_Store|/backup|/db|/database|/\.idea|/\.vscode)(?:[/\s?][^"]*)?",Referer:"[^"]*",Status:(?:404|403|400),Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+failregex = ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:/\.git|/\.env|/\.bak|/\.sql|/\.log|/wp-config|/config\.php|/\.htaccess|/\.htpasswd|/admin|/phpmyadmin|/manager|/console|/\.svn|/\.DS_Store|/backup|/db|/database|/\.idea|/\.vscode)(?:[/\s?][^"]*)?",Referer:"[^"]*",Status:(?:404|403|400),Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 ignoreregex =
 EOF
 
@@ -84,7 +84,7 @@ EOF
 [Definition]
 datepattern = %%Y-%%m-%%dT%%H:%%M:%%S%%z
 # 匹配恶意爬虫/扫描器 User-Agent
-failregex = ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:[0-9]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*?(?i:python-requests|go-http|java|nikto|nmap|sqlmap|nessus|openvas|w3af|acunetix|netsparker|burp|dirbuster|gobuster|wfuzz|hydra|zmeu|masscan|pangolin|zgrab|censys|shodan|curl|wget|libwww|perl|php|ruby|mj12bot|bytespider)[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+failregex = ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:[0-9]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*?(?i:python-requests|go-http|java|nikto|nmap|sqlmap|nessus|openvas|w3af|acunetix|netsparker|burp|dirbuster|gobuster|wfuzz|hydra|zmeu|masscan|pangolin|zgrab|censys|shodan|curl|wget|libwww|perl|php|ruby|mj12bot|bytespider)[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 ignoreregex =
 EOF
 
@@ -93,9 +93,9 @@ EOF
 datepattern = %%Y-%%m-%%dT%%H:%%M:%%S%%z
 failregex =
   # 匹配 SQL 注入尝试
-  ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:union[\s\+\/\*]*?select|select[\s\+\/\*\w\.,]*?from|insert[\s\+\/\*\w\.,]*?into|delete[\s\+\/\*\w\.,]*?from|drop[\s\+\/\*\w\.,]*?table|update[\s\+\/\*\w\.,]*?set|exec[^"]*?\(|execute[^"]*?\(|xp_|sp_|0x[0-9a-f]+|char\(|concat\(|benchmark\(|sleep\(|waitfor|load_file|into[^"]*?outfile|into[^"]*?dumpfile).*",Referer:"[^"]*",Status:[\d\.-]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+  ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:union[\s\+\/\*]*?select|select[\s\+\/\*\w\.,]*?from|insert[\s\+\/\*\w\.,]*?into|delete[\s\+\/\*\w\.,]*?from|drop[\s\+\/\*\w\.,]*?table|update[\s\+\/\*\w\.,]*?set|exec[^"]*?\(|execute[^"]*?\(|xp_|sp_|0x[0-9a-f]+|char\(|concat\(|benchmark\(|sleep\(|waitfor|load_file|into[^"]*?outfile|into[^"]*?dumpfile).*",Referer:"[^"]*",Status:[\d\.-]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
   # 匹配 XSS 尝试
-  ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:<script|%%3Cscript|javascript:|<svg|%%3Csvg|<iframe|%%3Ciframe|onerror|onload|onclick|onfocus|onscroll|onmouseover|src=|eval(?:\(|%%28)|alert(?:\(|%%28)|prompt(?:\(|%%28)|confirm(?:\(|%%28)|document\.|window\.)[^"]*",Referer:"[^"]*",Status:[\d\.-]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+  ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:<script|%%3Cscript|javascript:|<svg|%%3Csvg|<iframe|%%3Ciframe|onerror|onload|onclick|onfocus|onscroll|onmouseover|src=|eval(?:\(|%%28)|alert(?:\(|%%28)|prompt(?:\(|%%28)|confirm(?:\(|%%28)|document\.|window\.)[^"]*",Referer:"[^"]*",Status:[\d\.-]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 ignoreregex =
 EOF
 
@@ -105,25 +105,25 @@ datepattern = %%Y-%%m-%%dT%%H:%%M:%%S%%z
 
 failregex =
   # [A] Authentication failed
-  ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:401,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+  ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:401,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 
   # [B] Limit request
-  ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:429,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+  ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:429,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 
   # [C] Login failed
-  ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+?(?:/wp-login\.php|/admin|/login|/user/login|/auth|/signin|/api/login)(?:[/\s?][^"]*)?",Referer:"[^"]*",Status:(?:401|403|404|429|500),Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+  ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+?(?:/wp-login\.php|/admin|/login|/user/login|/auth|/signin|/api/login)(?:[/\s?][^"]*)?",Referer:"[^"]*",Status:(?:401|403|404|429|500),Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 
   # [D] Sensitive Files (Locked to 404/403/400)
-  ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:/\.git|/\.env|/\.bak|/\.sql|/\.log|/wp-config|/config\.php|/\.htaccess|/\.htpasswd|/admin|/phpmyadmin|/manager|/console|/\.svn|/\.DS_Store|/backup|/db|/database|/\.idea|/\.vscode)(?:[/\s?][^"]*)?",Referer:"[^"]*",Status:(?:404|403|400),Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+  ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:/\.git|/\.env|/\.bak|/\.sql|/\.log|/wp-config|/config\.php|/\.htaccess|/\.htpasswd|/admin|/phpmyadmin|/manager|/console|/\.svn|/\.DS_Store|/backup|/db|/database|/\.idea|/\.vscode)(?:[/\s?][^"]*)?",Referer:"[^"]*",Status:(?:404|403|400),Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 
   # [E] Bot & Scanners
-  ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:[0-9]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*?(?i:python-requests|go-http|java|nikto|nmap|sqlmap|nessus|openvas|w3af|acunetix|netsparker|burp|dirbuster|gobuster|wfuzz|hydra|zmeu|masscan|pangolin|zgrab|censys|shodan|curl|wget|libwww|perl|php|ruby|mj12bot|bytespider)[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+  ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*",Referer:"[^"]*",Status:[0-9]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*?(?i:python-requests|go-http|java|nikto|nmap|sqlmap|nessus|openvas|w3af|acunetix|netsparker|burp|dirbuster|gobuster|wfuzz|hydra|zmeu|masscan|pangolin|zgrab|censys|shodan|curl|wget|libwww|perl|php|ruby|mj12bot|bytespider)[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 
   # [F] SQL Injection
-  ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:union[\s\+\/\*]*?select|select[\s\+\/\*\w\.,]*?from|insert[\s\+\/\*\w\.,]*?into|delete[\s\+\/\*\w\.,]*?from|drop[\s\+\/\*\w\.,]*?table|update[\s\+\/\*\w\.,]*?set|exec[^"]*?\(|execute[^"]*?\(|xp_|sp_|0x[0-9a-f]+|char\(|concat\(|benchmark\(|sleep\(|waitfor|load_file|into[^"]*?outfile|into[^"]*?dumpfile).*",Referer:"[^"]*",Status:[\d\.-]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+  ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:union[\s\+\/\*]*?select|select[\s\+\/\*\w\.,]*?from|insert[\s\+\/\*\w\.,]*?into|delete[\s\+\/\*\w\.,]*?from|drop[\s\+\/\*\w\.,]*?table|update[\s\+\/\*\w\.,]*?set|exec[^"]*?\(|execute[^"]*?\(|xp_|sp_|0x[0-9a-f]+|char\(|concat\(|benchmark\(|sleep\(|waitfor|load_file|into[^"]*?outfile|into[^"]*?dumpfile).*",Referer:"[^"]*",Status:[\d\.-]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 
   # [G] XSS (Cross-Site Scripting)
-  ^IP:<HOST>,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:<script|%%3Cscript|javascript:|<svg|%%3Csvg|<iframe|%%3Ciframe|onerror|onload|onclick|onfocus|onscroll|onmouseover|src=|eval(?:\(|%%28)|alert(?:\(|%%28)|prompt(?:\(|%%28)|confirm(?:\(|%%28)|document\.|window\.)[^"]*",Referer:"[^"]*",Status:[\d\.-]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
+  ^IP:<HOST>[^,]*,Time:[^,]*,Request:"(?:GET|POST|HEAD)\s+[^"]*?(?i:<script|%%3Cscript|javascript:|<svg|%%3Csvg|<iframe|%%3Ciframe|onerror|onload|onclick|onfocus|onscroll|onmouseover|src=|eval(?:\(|%%28)|alert(?:\(|%%28)|prompt(?:\(|%%28)|confirm(?:\(|%%28)|document\.|window\.)[^"]*",Referer:"[^"]*",Status:[\d\.-]+,Bytes:[\d\.-]+,IPChain:"[^"]*",UserAgent:"[^"]*",RT:\[[\d\.-]+\],UCT:\[[\d\.-]+\],UHT:\[[\d\.-]+\],URT:\[[\d\.-]+\]
 
 ignoreregex =
 EOF
@@ -169,13 +169,13 @@ configure_nginx() {
   echo -e "${INFO} Enable nginx jail"
   cat > "${jail_path}/nginx.conf" <<EOF
 [nginx]
-enabled  = true
-port     = http,https
-filter   = nginx-all-in-one
-backend = pyinotify
-logpath  = /home/wwwlogs/nginx_access.log
-           /home/wwwlogs/nginx_error.log
-           /home/wwwlogs/nginx_login.log
+enabled   = true
+port      = http,https
+filter    = nginx-all-in-one
+backend   = pyinotify
+logpath   = /home/wwwlogs/nginx_access.log
+            /home/wwwlogs/nginx_error.log
+            /home/wwwlogs/nginx_login.log
 banaction = ufw
 # 1小时内尝试3次则封禁24小时
 maxretry  = 3
@@ -191,7 +191,7 @@ configure_mail() {
 enabled   = true
 port      = smtp,ssmtp,submission
 filter    = postfix
-backend = pyinotify
+backend   = pyinotify
 logpath   = /var/log/mail.log
 # backend   = systemd
 # journalmatch = _SYSTEMD_UNIT=postfix@-.service
@@ -205,7 +205,7 @@ bantime   = 24h
 enabled   = true
 port      = smtp,ssmtp,submission,imap,imaps,pop3,pop3s
 filter    = postfix[mode=auth]
-backend = pyinotify
+backend   = pyinotify
 logpath   = /var/log/mail.log
 # backend   = systemd
 # journalmatch = _SYSTEMD_UNIT=postfix@-.service
@@ -219,7 +219,7 @@ bantime   = 48h
 enabled   = true
 port      = pop3,pop3s,imap,imaps,submission,smtps,sieve
 filter    = dovecot
-backend = pyinotify
+backend   = pyinotify
 logpath   = /var/log/mail.log
 banaction = ufw
 # 给正常用户 5 次机会，防止因为移动端配置错误导致误封
