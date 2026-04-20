@@ -541,10 +541,14 @@ install_acme() {
   [ -f /usr/local/acme.sh/acme.sh ] && return 0
 
   cd ${HOME}/nginx
-  git clone https://github.com/acmesh-official/acme.sh.git
+  if env | grep -q SUDO; then
+    acme_sh_sudo="-f"
+  fi
+  git clone --depth 1 https://github.com/acmesh-official/acme.sh.git
   cd ./acme.sh
-  ./acme.sh --install  \
+  ./acme.sh --install ${acme_sh_sudo} --log \
             --home /usr/local/acme.sh/ \
+            --certhome /usr/local/nginx/conf/ssl \
             --accountemail "$email_address"
   cd -
 }
