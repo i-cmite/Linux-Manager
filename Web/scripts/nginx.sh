@@ -551,6 +551,7 @@ install_acme() {
             --certhome /usr/local/nginx/conf/ssl \
             --accountemail "$email_address"
   cd -
+  rm -rf acme.sh
 }
 
 check_nginx()
