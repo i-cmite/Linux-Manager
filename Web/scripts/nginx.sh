@@ -498,7 +498,6 @@ EOF
 </html>' > /usr/local/nginx/html/404.html
   mkdir -p /usr/local/nginx/conf/vhost
   chown -R root:root /usr/local/nginx/conf/
-  # service
   cat "${Nginx_Parent_PATH}/service/nginx.service" > /etc/systemd/system/nginx.service
 }
 
@@ -538,16 +537,17 @@ install_acme() {
   [ -f /usr/local/acme.sh/acme.sh ] && return 0
 
   cd ${HOME}/nginx
-  git clone https://github.com/acmesh-official/acme.sh.git
-  cd ./acme.sh
-  if env |grep -q SUDO; then
+  if env | grep -q SUDO; then
     acme_sh_sudo="-f"
   fi
+  git clone --depth 1 https://github.com/acmesh-official/acme.sh.git
+  cd ./acme.sh
   ./acme.sh --install ${acme_sh_sudo} --log \
             --home /usr/local/acme.sh/ \
             --certhome /usr/local/nginx/conf/ssl \
             --accountemail "$email_address"
   cd -
+  rm -rf acme.sh
 }
 
 check_nginx()
