@@ -145,6 +145,9 @@ bantime.increment = true
 bantime.maxtime = -1
 # "backend" specifies the backend used to get files modification.
 backend = auto
+# 设置防火墙
+banaction = $ACTION
+banaction_allports = $ALLPORTS
 EOF
 }
 
@@ -157,7 +160,6 @@ port      = ssh
 filter    = sshd
 mode      = aggressive
 backend   = systemd
-banaction = ufw
 # 1天内尝试5次就永久封禁
 maxretry  = 5
 findtime  = 1d
@@ -176,7 +178,6 @@ backend   = pyinotify
 logpath   = /home/wwwlogs/nginx_access.log
             /home/wwwlogs/nginx_error.log
             /home/wwwlogs/nginx_login.log
-banaction = ufw
 # 1小时内尝试3次则封禁24小时
 maxretry  = 3
 findtime  = 1h
@@ -195,7 +196,6 @@ backend   = pyinotify
 logpath   = /var/log/mail.log
 # backend   = systemd
 # journalmatch = _SYSTEMD_UNIT=postfix@-.service
-banaction = ufw
 # 邮件服务的暴力破解通常更具针对性，可以缩短 findtime
 maxretry  = 3
 findtime  = 10m
@@ -209,7 +209,6 @@ backend   = pyinotify
 logpath   = /var/log/mail.log
 # backend   = systemd
 # journalmatch = _SYSTEMD_UNIT=postfix@-.service
-banaction = ufw
 # 认证失败
 maxretry  = 3
 findtime  = 10m
@@ -221,12 +220,28 @@ port      = pop3,pop3s,imap,imaps,submission,smtps,sieve
 filter    = dovecot
 backend   = pyinotify
 logpath   = /var/log/mail.log
-banaction = ufw
 # 给正常用户 5 次机会，防止因为移动端配置错误导致误封
 maxretry  = 5
 findtime  = 20m
 bantime   = 24h
 EOF
+}
+
+detect_fail2ban_banaction() {
+    if command -v ufw >/dev/null 2>&1 && ufw status | grep -q "Status: active"; then
+        ACTION="ufw"
+        ALLPORTS="ufw"
+        return 0
+    fi
+
+    if iptables --version 2>/dev/null | grep -q "nf_tables"; then
+        ACTION="nftables"
+        ALLPORTS="nftables-allports"
+        return 0
+    fi
+
+    ACTION="iptables-multiport"
+    ALLPORTS="iptables-allports"
 }
 
 configure() {
@@ -244,11 +259,11 @@ configure() {
 
 check_status() {
   fail2ban-client status
-  if command -v ufw >/dev/null 2>&1; then
-    ufw status
-  else
-    iptables -L -n -v
-  fi
+  case "$ACTION" in
+    ufw)      ufw status ;;
+    nftables) nft list ruleset ;;
+    *)        iptables -L -n -v ;;
+  esac
 }
 
 install() {
@@ -258,6 +273,8 @@ install() {
     backup_nginx_filter
     generate_nginx_filter
   }
+  # 先确定防火墙
+  detect_fail2ban_banaction
   configure
   check_status
 }
